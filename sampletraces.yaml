@@ -1,0 +1,25 @@
+---
+programid: program1
+# any other information here
+preconditons:
+  - "x > 0" # not sure what should and shouldn't be wrapped in parens
+  - "x <= 10"
+postconditions:
+  - "x > 0"
+traces:
+  - id: trace1
+    status: good
+    statements:
+      - statement: "x = x + 1" # is there a standard format for a statement?
+        line: 1
+      - statement: "(x > 0)"
+        line: 2
+      # etc.
+  - id: trace2
+    status: bad
+    statements:
+      - statement: "x = x + 1"
+        line: 1
+      - statement: "!(x > 0)"
+        line: 2
+...
