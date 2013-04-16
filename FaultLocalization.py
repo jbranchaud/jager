@@ -40,7 +40,64 @@ def main(args):
 
     print stmt_list
 
-    print compute_all_susp(stmt_list, good_count, bad_count, total_count)
+    susp_dict = compute_all_susp(stmt_list, good_count, bad_count, total_count)
+
+    ranked_list = rank_stmt_dict(susp_dict)
+
+    print('susp dict: ' + str(susp_dict))
+
+    print('ranked list: ' + str(ranked_list))
+
+def rank_stmt_dict(stmt_dict):
+    """
+    rank_stmt_dict
+
+    this function will go through the stmt_dict and build a ranked list of
+    the line with the highest suspiciousness score down to the line with
+    the smallest suspiciousness score.
+    """
+    # create an empty ranked_list
+    ranked_list = []
+
+    for stmt in stmt_dict:
+        ranked_list.append([stmt,stmt_dict[stmt]])
+
+    # sort the list
+    ranked_list = quicksort(ranked_list)
+
+    return ranked_list
+
+def quicksort(stmt_list):
+    """
+    quicksort
+
+    this function will perform a quick sort on the values of each item in
+    the statement list. The resulting list ranked from the largest value to
+    the smallest value.
+    """
+    if len(stmt_list) <= 1:
+        return stmt_list
+
+    pivot = stmt_list.pop()
+
+    less = []
+    more = []
+
+    pivot_dec = Decimal(pivot[1])
+
+    for stmt in stmt_list:
+        if Decimal(stmt[1]) < pivot_dec:
+            less.append(stmt)
+        else:
+            more.append(stmt)
+
+    sorted_less = quicksort(less)
+    sorted_more = quicksort(more)
+    sorted_list = []
+    sorted_list.extend(sorted_less)
+    sorted_list.extend([pivot])
+    sorted_list.extend(sorted_more)
+    return sorted_list
 
 def compute_all_susp(stmt_dict, good, bad, total):
     """
