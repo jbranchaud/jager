@@ -95,6 +95,9 @@ def rank_stmt_dict(stmt_dict):
     # sort the list
     ranked_list = quicksort(ranked_list)
 
+    # reverse the list to get it in order of most to least suspicious
+    ranked_list.reverse()
+
     return ranked_list
 
 def quicksort(stmt_list):
@@ -102,8 +105,8 @@ def quicksort(stmt_list):
     quicksort
 
     this function will perform a quick sort on the values of each item in
-    the statement list. The resulting list ranked from the largest value to
-    the smallest value.
+    the statement list. The resulting list ranked from the smallest value to
+    the largest value.
     """
     if len(stmt_list) <= 1:
         return stmt_list
