@@ -11,15 +11,19 @@ system, this script will determine the statements that are most suspicious
 import sys
 import os.path
 import yaml
-from decimal import *
+from decimal import Decimal
+import decimal
 
 def main(args):
     """
+    main
 
+    the main function for this script that will read in the given YAML file
+    and compute the suspiciousness for it.
     """
     
     # set the decimal context
-    getcontext().prec = 6
+    decimal.getcontext().prec = 6
 
     # grab the yaml content
     document = get_yaml_content(args[0])
