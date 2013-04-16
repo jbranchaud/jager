@@ -1,0 +1,74 @@
+---
+programid: program2
+preconditons:
+  - "x > 0"
+  - "x <= 10"
+postconditions:
+  - "x > 0"
+traces:
+  - id: trace1
+    status: good
+    statements:
+      - statement: "int bias;"
+        line: 2
+      - statement: "(inhibit)"
+        line: 3
+      - statement: "bias = down_sep;"
+        line: 4
+      - statement: "!(bias > down_sep)"
+        line: 7
+      - statement: "return 0;"
+        line: 10
+  - id: trace2
+    status: bad
+    statements:
+      - statement: "int bias;"
+        line: 2
+      - statement: "(inhibit)"
+        line: 3
+      - statement: "bias = down_sep;"
+        line: 4
+      - statement: "!(bias > down_sep)"
+        line: 7
+      - statement: "return 0;"
+        line: 10
+  - id: trace3
+    status: good
+    statements:
+      - statement: "int bias;"
+        line: 2
+      - statement: "!(inhibit)"
+        line: 3
+      - statement: "bias = up_sep;"
+        line: 6
+      - statement: "(bias > down_sep)"
+        line: 7
+      - statement: "return 1;"
+        line: 8
+  - id: trace4
+    status: bad
+    statements:
+      - statement: "int bias;"
+        line: 2
+      - statement: "(inhibit)"
+        line: 3
+      - statement: "bias = down_sep;"
+        line: 4
+      - statement: "!(bias > down_sep)"
+        line: 7
+      - statement: "return 0;"
+        line: 10
+  - id: trace5
+    status: good
+    statements:
+      - statement: "int bias;"
+        line: 2
+      - statement: "!(inhibit)"
+        line: 3
+      - statement: "bias = up_sep;"
+        line: 6
+      - statement: "!(bias > down_sep)"
+        line: 7
+      - statement: "return 0;"
+        line: 10
+...
