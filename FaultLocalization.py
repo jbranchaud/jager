@@ -38,7 +38,7 @@ def main(args):
     # parse the traces
     stmt_list = parse_traces(document['traces'])
 
-    print stmt_list
+    #print stmt_list
 
     susp_dict = compute_all_susp(stmt_list, good_count, bad_count, total_count)
 
@@ -47,6 +47,36 @@ def main(args):
     print('susp dict: ' + str(susp_dict))
 
     print('ranked list: ' + str(ranked_list))
+
+def rank_statements(filename):
+    """
+    rank_statement
+
+    given the filename for a yaml file, this function will access the
+    content of the yaml file and then compute the ranked list which will be
+    returned by this function.
+    """
+    decimal.getcontext().prec = 6
+
+    # grab the yaml content
+    document = get_yaml_content(filename)
+
+    # count the number of good and bad traces
+    # the first will be good and the second will be bad
+    good_bad_count = count_traces(document['traces'])
+    good_count = good_bad_count[0]
+    bad_count = good_bad_count[1]
+    total_count = len(document['traces'])
+
+    # parse the traces
+    stmt_list = parse_traces(document['traces'])
+
+    susp_dict = compute_all_susp(stmt_list, good_count, bad_count, total_count)
+
+    ranked_list = rank_stmt_dict(susp_dict)
+
+    return ranked_list
+
 
 def rank_stmt_dict(stmt_dict):
     """
