@@ -15,6 +15,13 @@ techniques that rely on symbolic execution. These artifacts are primarily
 from the [SIR](http://sir.unl.edu/portal/index.php) repository which also
 provides variants/mutations for most of its programs.
 
+### SemFix Traffic Collision Avoidance System (sfTCAS)
+
+This program is a small excerpt from the larger TCAS program used as an
+example in the SemFix paper (see References section of top-level README)
+that nicely illustrates the power of these kinds of program repair
+techniques.
+
 ### Traffic Collision Avoidance System (TCAS)
 
 
