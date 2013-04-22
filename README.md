@@ -20,3 +20,15 @@ following format:
 
 Python Libraries:
 - [PyYaml](http://pyyaml.org/)
+
+## References
+
+- James A. Jones, Mary Jean Harrold, and John Stasko. 2002. Visualization of
+  test information to assist fault localization. In Proceedings of the 24th
+  International Conference on Software Engineering (ICSE '02). ACM, New
+  York, NY, USA, 467-477.
+
+- Hoang D. T. Nguyen, Dawei Qi, Abhik Roychoudhury, and Satish Chandra.
+  \2013. SemFix: Program Repair via Semantic Analysis. In Proceedings of the
+  35th International Conference on Software Engineering (ICSE '13).
+  ACM, San Francisco, CA, USA.
