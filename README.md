@@ -5,6 +5,9 @@ a class project for CSE990 at [UNL](http://unl.edu) in
 
 ## Specification File Format
 
+the specification files are [YAML](http://www.yaml.org/) files with the
+following format:
+
     pre:
     - "precondition1"
     - "precondition2"
