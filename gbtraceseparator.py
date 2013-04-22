@@ -1,4 +1,5 @@
 import sys
+import FaultLocalization
 from z3 import *
 
 
@@ -96,6 +97,7 @@ def solve(constraints, variables, preconditions, postconditions):
     s = Solver()
     variables["Or"]=Or
     variables["And"]=And
+    variables["Not"]=Not
     
     for pre in preconditions:
         variables = getVariablesPre(pre, variables)
@@ -110,9 +112,9 @@ def solve(constraints, variables, preconditions, postconditions):
         variables = getVariablesPost(post, variables)
         #for thing in variables:
         #    print(thing+" -> "+str(id(variables[thing])))
-        s.add(eval(post, {}, variables))
+        s.add(eval("Not("+post+")", {}, variables))
         
-    return s.check()
+    return s
 
 def getParts(line):
     try:
@@ -137,9 +139,9 @@ def prettyPrint(outputfile, arr, solution, i):
     f.write("\n")
 
     if(str(solution)=="sat"):
-        gb = "good"
-    else:
         gb = "bad"
+    else:
+        gb = "good"
     f.write("    status: "+gb)
     f.write("\n")
 
@@ -155,6 +157,11 @@ def prettyPrint(outputfile, arr, solution, i):
         f.write("        line: "+lineNum)
         f.write("\n")
 
+    f.close()
+
+def printFooter(outputfile):
+    f = open(outputfile, "a")
+    f.write("...")
     f.close()
 
 
@@ -178,7 +185,7 @@ def printHeader(outputfile, preconditions, postconditions, programID, otherInfo)
 
     f.write("postconditions: ")
     f.write("\n")
-    for condition in preconditions:
+    for condition in postconditions:
         f.write('  - "'+condition+'"')
         f.write("\n")
 
@@ -188,12 +195,12 @@ def printHeader(outputfile, preconditions, postconditions, programID, otherInfo)
     f.close()
 
 
-traceFile = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/randoopscripts/traces.txt"
-outputfile = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/randoopscripts/gbtraces.txt"
+traceFile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/traces.txt"
+outputfile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/gbtraces.txt"
 
-preconditions = ["Or(x == 10, y == 12)"]
+preconditions = []
 ##Just for now, label all variables as xf and yf to designate final
-postconditions = ["retf == 10"]
+postconditions = ["retf > 1"]
 programId = "None"
 otherInfo = []
 
@@ -201,15 +208,15 @@ printHeader(outputfile, preconditions, postconditions, programId, otherInfo)
 arr = getIndividualPaths(traceFile)
 i = 0
 while(i<len(arr)):
+    print("Evaluating trace "+str(i))
     #Split the pieces up so don't have the line number
     trace = parse(arr[i])
-    print(trace)
 
     #Evaluate each line in the constraint so it can be used by Z3
     constraints, variables = getConstraints(trace)
 
     #Call the solver
-    solution = solve(constraints, variables, preconditions, [])
+    s = solve(constraints, variables, preconditions, [])
 
     #For the Z3 solver is more powerful than jpf so make sure feasible path
     #Just as a feasibility note, we are using the SAT solver five times when only need to twice
@@ -220,12 +227,24 @@ while(i<len(arr)):
             #This wouldn't be needed for the same reasons above, then could capture it with JPF failing state in listener
         #4) To generate all the traces after the bad line
         #5) To make sure the generated traces after the bad line are valid since Z3 better than JPF
-    if(str(solution)=="sat"):
+    print(s.check())
+    if(str(s.check())=="sat"):
         
-        solution = solve(constraints, variables, preconditions, postconditions)
-        
-        prettyPrint(outputfile, arr[i], solution, i)
+        s = solve(constraints, variables, preconditions, postconditions)
+
+        if(str(s.check())=="sat"):
+            print("Bad trace")
+            print(s)
+            print(str(s.model()))
+        else:
+            print("good trace")
+        prettyPrint(outputfile, arr[i], str(s.check()), i)
 
     i = i + 1
+
+printFooter(outputfile)
 print("Done parsing traces")
+
+listBugs = FaultLocalization.rank_statements(outputfile)
+print(listBugs)
 
