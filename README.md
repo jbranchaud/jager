@@ -3,7 +3,9 @@
 a class project for CSE990 at [UNL](http://unl.edu) in
 [the Department of Computer Science and Engineering](http://cse.unl.edu)
 
-## Specification File Format
+## File Formats
+
+### Specification File Format
 
 the specification files are [YAML](http://www.yaml.org/) files with the
 following format:
@@ -15,6 +17,44 @@ following format:
     post:
     - "postcondition1"
     - "postcondition2"
+
+### Traces File Format
+
+the traces files are [YAML](http://www.yaml.org/) files with the following
+format:
+
+    ---
+    programid: program1
+    preconditions:
+      - "precondition1"
+      - "precondition2"
+    postconditions:
+      - "postcondition1"
+      - "postcondition2"
+    traces:
+      - id: trace1
+        status: good
+        statements:
+          - statement: "x = x + 1"
+            line: 1
+          - statement: "(x > 0)"
+            line: 2
+          - statement: "x = x + 1"
+            line: 3
+          - statement: "return x"
+            line: 6
+      - id: trace2
+        status: bad
+        statements:
+          - statement: "x = x + 1"
+            line: 1
+          - statement: "!(x > 0)"
+            line: 2
+          - statement: "x = x - 1"
+            line: 5
+          - statement: "return x"
+            line: 6
+    ...
 
 ## Requirements
 
