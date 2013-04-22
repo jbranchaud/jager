@@ -1,0 +1,5 @@
+pre:
+post:
+- "ret == 1 || ret == 0"
+- "bias >= up_sep"
+- "bias == up_sep || bias == up_sep + 100"
