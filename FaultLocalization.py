@@ -35,6 +35,10 @@ def main(args):
     bad_count = good_bad_count[1]
     total_count = len(document['traces'])
 
+    if bad_count == 0 and good_count == total_count:
+        print("your program works, why are you here?!")
+        sys.exit(0)
+
     # parse the traces
     stmt_list = parse_traces(document['traces'])
 
@@ -67,6 +71,10 @@ def rank_statements(filename):
     good_count = good_bad_count[0]
     bad_count = good_bad_count[1]
     total_count = len(document['traces'])
+
+    if bad_count == 0 and good_count == total_count:
+        print("your program works, why are you here?!")
+        sys.exit(0)
 
     # parse the traces
     stmt_list = parse_traces(document['traces'])
@@ -161,7 +169,16 @@ def get_susp_score(goods, good, bads, bad, total):
     formula used in the Tarantula paper.
 
     susp(s) = bads/bad / (bads/bad) + (goods/good)
+
+    if all the traces are bad traces, then a simpler formula will be
+    computed:
+
+    susp(s) = bads/bad
     """
+    # if there are no good traces, then compute simpler formula
+    if good == 0:
+        return Decimal(bads) / Decimal(bad)
+
     # compute a Decimal value and return that
     bad_div = Decimal(bads) / Decimal(bad)
     good_div = Decimal(goods) / Decimal(good)
