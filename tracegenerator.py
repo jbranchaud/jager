@@ -53,7 +53,9 @@ def createJPFFile(nc, c, path, package, dest):
     f2.write("\n\n")
     f2.write("symbolic.package="+package+";Integer")
     f2.write("\n\n")
-    f2.write("errorOfLine=-1")
+    f2.write("jager.lineOfError=-1")
+    f2.write("\n\n")
+    f2.write("jager.outputFile="+dest)
 
     f2.close();
 
@@ -203,7 +205,7 @@ print("Hi Eric")
 
 
 ##Where to put classfile that is generated
-home = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/randoopscripts"
+home = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output"
 ##Main package (Only do the top level.  For example is package is eric.rizzi just do eric
 package ="eric"
 ##Where the .class files are
@@ -215,7 +217,7 @@ libraries = "../"
 ##Iterations
 iterations = 1
 #Desination of test cases
-destination = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/outputs/tests"
+destination = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output"
 ##Timeout
 inittimeout = 10
 secondarytimeout = 100

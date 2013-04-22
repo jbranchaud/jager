@@ -1,0 +1,13 @@
+Running Symbolic PathFinder ...
+symbolic.dp=choco
+symbolic.string_dp_timeout_ms=0
+symbolic.string_dp=automata
+symbolic.choco_time_bound=30000
+symbolic.min_int=-1000000
+symbolic.max_int=1000000
+symbolic.min_double=-8.0
+symbolic.max_double=7.0
+[SEVERE] JPF configuration error: error instantiating class gov.nasa.jpf.symbc.listeners.TargetedSE for entry "listener":
+> exception in gov.nasa.jpf.symbc.listeners.TargetedSE(gov.nasa.jpf.Config,gov.nasa.jpf.JPF):
+>> java.lang.NullPointerException
+[SEVERE] JPF terminated
