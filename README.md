@@ -10,6 +10,7 @@ a class project for CSE990 at [UNL](http://unl.edu) in
 the specification files are [YAML](http://www.yaml.org/) files with the
 following format:
 
+    ---
     pre:
     - "precondition1"
     - "precondition2"
@@ -17,6 +18,7 @@ following format:
     post:
     - "postcondition1"
     - "postcondition2"
+    ...
 
 ### Traces File Format
 
