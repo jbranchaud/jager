@@ -3,6 +3,48 @@
 a class project for CSE990 at [UNL](http://unl.edu) in
 [the Department of Computer Science and Engineering](http://cse.unl.edu)
 
+## Fault Localization
+
+The FaultLocalization.py script is a module that can imported and used to
+compute a ranked list of suspicious statements for a method based on a the
+good and bad traces specified in a `Traces` YAML file (see below for
+format).
+
+The script utilizes the concept of *Statistical Fault Localization* to build
+a ranked list of statements based on their suspiciousness as computed by:
+
+    susp(s) = (failed(s)/totalFailed) / ((passed(s)/totalPassed) + (failed(s)/totalFailed))
+
+This comes from the Tarantula paper (see References). This formula is based
+on passing and failing test cases and the traces through the program
+exercised by those test cases. For our approach, we generate symbolic traces
+through a program using symbolic execution, so we have adapted the formula
+to be the following:
+
+    susp(s) = (bad(s)/totalBad) / ((good(s)/totalGood) + (bad(s)/totalBad))
+
+This is the same formula, but based on good/bad traces rather than
+passing/failing test cases.
+
+Additionally, there are two corner cases that need to be dealt with when
+computing the above suspiciousness score. The first corner case is when all
+the traces for the program are *good* traces. The second corner case is when
+all the traces for the program are *bad* traces.
+
+For all *good* traces, we simply exit the fault localization procedure
+because there is no reason to do program repair when the program meets the
+given specification.
+
+For all *bad* traces, we use a simplified version of the above formula that
+looks like the following:
+
+    susp(s) = bad(s) / totalBad
+
+The ranked list returned by this script is a python list of lists where the
+sublists are of length two with the first item being an integer representing
+the particular line number and the second item being a string representing a
+decimal value that is the ranking (between 1.0 and 0.0).
+
 ## File Formats
 
 ### Specification File Format
