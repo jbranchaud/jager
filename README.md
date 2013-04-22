@@ -29,6 +29,6 @@ Python Libraries:
   York, NY, USA, 467-477.
 
 - Hoang D. T. Nguyen, Dawei Qi, Abhik Roychoudhury, and Satish Chandra.
-  \2013. **SemFix: Program Repair via Semantic Analysis**. In Proceedings of the
+  2013\. **SemFix: Program Repair via Semantic Analysis**. In Proceedings of the
   35th International Conference on Software Engineering (ICSE '13).
   ACM, San Francisco, CA, USA.
