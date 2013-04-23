@@ -33,6 +33,7 @@ import gov.nasa.jpf.jvm.bytecode.IfInstruction;
 import gov.nasa.jpf.jvm.bytecode.Instruction;
 import gov.nasa.jpf.jvm.bytecode.RETURN;
 import gov.nasa.jpf.report.ConsolePublisher;
+import gov.nasa.jpf.report.Publisher;
 import gov.nasa.jpf.search.Search;
 import gov.nasa.jpf.symbc.SymbolicInstructionFactory;
 import gov.nasa.jpf.symbc.bytecode.BytecodeUtils;
@@ -41,6 +42,8 @@ import gov.nasa.jpf.symbc.numeric.PCChoiceGenerator;
 import gov.nasa.jpf.symbc.numeric.PathCondition;
 import gov.nasa.jpf.symbc.numeric.SymbolicConstraintsGeneral;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -55,6 +58,10 @@ public class TargetedSE extends ListenerAdapter{
 	int startLine;
 	
 	String adder;
+	
+	PrintWriter pw;
+	
+	boolean primed;
 
 	// custom marker to mark error strings in method sequences
 
@@ -65,11 +72,13 @@ public class TargetedSE extends ListenerAdapter{
 		jpf.addPublisherExtension(ConsolePublisher.class, this);
 		confFile = conf;
 		startLine = BytecodeUtils.getErrorLineNumber(conf);
+		pw = null;
 		if(startLine>=0){
 			adder="f";
 		}else{
 			adder="";
 		}
+		primed = false;
 	}
 
 
@@ -80,8 +89,6 @@ public class TargetedSE extends ListenerAdapter{
 			SystemState ss = vm.getSystemState();
 
 			ChoiceGenerator<?> [] cgs = ss.getChoiceGenerators();
-			System.out.println("\n\n\n\n");
-			System.out.println("********************");
 			Map<String, Integer> ssa = new HashMap<String, Integer>();
 
 
@@ -90,6 +97,8 @@ public class TargetedSE extends ListenerAdapter{
 			int i = 0;
 
 			s = new LinkedList<String>();
+			
+			primed = false;
 			
 			BooleanPointer printIt = new BooleanPointer(false);
 
@@ -114,11 +123,33 @@ public class TargetedSE extends ListenerAdapter{
 				}                   
 
 			}
-			if(printIt.getValue()||startLine<0){
-				while(!s.isEmpty()){
-					System.out.println(s.removeLast());
-				}
+			this.printToFile(s, printIt);
+		}
+	}
+	
+	public void publishStart (Publisher publisher) {
+		String outfile = BytecodeUtils.geJagerWrite(confFile);
+		try {
+			pw = new PrintWriter(outfile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void publishFinished (Publisher publisher) {
+		pw.close();
+	}
+	
+	private void printToFile(LinkedList<String> list, BooleanPointer printIt){
+		if(printIt.getValue()||startLine<0){
+			pw.println("\n\n\n\n");
+			pw.println("********************");
+			while(!s.isEmpty()){
+				pw.println(s.removeLast());
+				//System.out.println(s.removeLast());
 			}
+			pw.flush();
 		}
 	}
 	
@@ -141,32 +172,42 @@ public class TargetedSE extends ListenerAdapter{
 			Instruction insn = vm.getLastInstruction();
 
 			//If going to start doing loops than final boolean statement in this if will require a lot more thought
-			if (insn!= null && insn.getSourceLocation()!=null && insn.getSourceLocation().contains("eric.josh.First.test")&&insn.getLineNumber()==startLine) {
-				//System.out.println("\n\n\n\n\n");
+			if (insn!= null && insn.getSourceLocation()!=null &&insn.getLineNumber()==startLine) {
+				if(BytecodeUtils.isMemberClassUnderTest(confFile, insn.getSourceLocation())){
+					//System.out.println("\n\n\n\n\n");
 
-				ChoiceGenerator<?> cg = ss.getChoiceGenerator();
-				
-				if (!(cg instanceof PCChoiceGenerator)){
-					ChoiceGenerator<?> prev_cg = cg.getPreviousChoiceGenerator();
-					while (!((prev_cg == null) || (prev_cg instanceof PCChoiceGenerator))) {
-						prev_cg = prev_cg.getPreviousChoiceGenerator();
+					ChoiceGenerator<?> cg = ss.getChoiceGenerator();
+
+					if (!(cg instanceof PCChoiceGenerator)){
+						ChoiceGenerator<?> prev_cg = cg.getPreviousChoiceGenerator();
+						while (!((prev_cg == null) || (prev_cg instanceof PCChoiceGenerator))) {
+							prev_cg = prev_cg.getPreviousChoiceGenerator();
+						}
+						cg = prev_cg;
 					}
-					cg = prev_cg;
-				}
-				if ((cg instanceof PCChoiceGenerator) && ((PCChoiceGenerator) cg).getCurrentPC() != null){
-					((PCChoiceGenerator)cg).setCurrentPC(new PathCondition());
+					if ((cg instanceof PCChoiceGenerator) && ((PCChoiceGenerator) cg).getCurrentPC() != null){
+						((PCChoiceGenerator)cg).setCurrentPC(new PathCondition());
+					}
 				}
 			}
 		}
 	}
 
+
+
 	private void handleIfStatement(IfInstruction currentIf, boolean conditionalValue, Map<String, Integer> ssa, BooleanPointer printIt){
 		//Means Integer LT 0
-		if(currentIf.getLineNumber()==startLine && printIt.getValue()==false){
+		if(primed && printIt.getValue()==false&&currentIf.getLineNumber()!=startLine){
 			printIt.setValue(true);
 			ssa.clear();
 			s.clear();
 		}
+		
+		if(currentIf.getLineNumber()==startLine && !primed){
+			primed = true;
+		}
+			
+
 		
 		if(currentIf instanceof IFLT){
 			//                                System.out.println((((IFLT)currentIf)));
@@ -314,10 +355,14 @@ public class TargetedSE extends ListenerAdapter{
 	private int printBlock(Instruction [] code, int pc, Map<String, Integer> ssa, BooleanPointer printIt){
 		int i = pc;
 		while(i>=0 && i<code.length && code[i]!=null && !code[i].toString().contains("if")){
-			if(code[i].getLineNumber()==startLine && printIt.getValue()==false){
+			if(primed && printIt.getValue()==false && code[i].getLineNumber()!=startLine){
 				printIt.setValue(true);
 				s.clear();
 				ssa.clear();
+			}
+			
+			if(code[i].getLineNumber()==startLine){
+				primed = true;
 			}
 			//System.out.println(code[i].toString());
 

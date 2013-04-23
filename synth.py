@@ -411,8 +411,6 @@ def grammar1(rhs, s, available):
 
     if(str(s.check())=="sat"):
         done = True
-        print(s)
-        print(s.model())
         m = s.model()
         ans = m[Int("hole")]
 
@@ -435,9 +433,10 @@ outputfile = ""
 
 preconditions = []
 postconditions = ["retf > 0"]
+rhs = "x"
 
 #Start the actual program
-rhs = "x"
+
 
 #The map of variables that will be added to throughout the program
 
