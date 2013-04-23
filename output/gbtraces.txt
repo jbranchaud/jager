@@ -2,7 +2,7 @@
 programid: None
 preconditions: 
 postconditions: 
-  - "retf > 1"
+  - "retf > 2"
 traces: 
   - id: trace0
     status: good
@@ -18,7 +18,7 @@ traces:
       - statement: "ret == x4"
         line:  18
   - id: trace1
-    status: good
+    status: bad
     statements: 
       - statement: "x1 <= 0"
         line:  11

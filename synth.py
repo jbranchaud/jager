@@ -424,15 +424,15 @@ def grammar2(rhs, s, available):
     i = 0
 
 
-traceFile = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/randoopscripts/traces.txt"
-errorLine = "16"
+traceFile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/traces.txt"
+errorLine = "14"
 
 ##Assume that variables have the form xf1 (st = secondary trace)
-secondaryTrace = "/Users/jessemiller/Desktop/Research/MattSebastian/Projects/HCC/CurrentTests/Mattsproject/randoopscripts/bottomtraces.txt"
+secondaryTrace = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/bottomtraces.txt"
 outputfile = ""
 
 preconditions = ["x < 100"]
-postconditions = ["retf == 20"]
+postconditions = ["retf > 10"]
 
 #Start the actual program
 rhs = "x"
