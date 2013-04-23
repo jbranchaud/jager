@@ -198,9 +198,9 @@ def printHeader(outputfile, preconditions, postconditions, programID, otherInfo)
 traceFile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/traces.txt"
 outputfile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/gbtraces.txt"
 
-preconditions = []
+preconditions = ["x != 0"]
 ##Just for now, label all variables as xf and yf to designate final
-postconditions = ["retf > 2"]
+postconditions = ["retf >= 0"]
 programId = "None"
 otherInfo = []
 
@@ -233,18 +233,23 @@ while(i<len(arr)):
         s = solve(constraints, variables, preconditions, postconditions)
 
         if(str(s.check())=="sat"):
-            print("Bad trace")
+            print("Bad trace\n")
+            print("Trace:")
             print(s)
+            print("\nModel\n")
             print(str(s.model()))
         else:
             print("good trace")
         prettyPrint(outputfile, arr[i], str(s.check()), i)
-
+    else:
+        print("Preconditions Discounted:")
+        print(s)
     i = i + 1
+    print("\n\n\n")
 
 printFooter(outputfile)
-print("Done parsing traces")
+#print("Done parsing traces")
 
-listBugs = FaultLocalization.rank_statements(outputfile)
-print(listBugs)
+#listBugs = FaultLocalization.rank_statements(outputfile)
+#print(listBugs)
 

@@ -4,3 +4,4 @@
 4) Run gbtracesseperator
 	This in turn runs the bug localization tools
 5) Run jpf with line number from bug localization
+	Problem…needs to be line number + 1

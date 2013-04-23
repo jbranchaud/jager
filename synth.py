@@ -382,11 +382,11 @@ def bigPush(s, t, secondTraces, rhs, variablesUsed, traceNum):
     variablesUsedMap = createAllUsedVariablesMap(variablesUsedMap, variablesUsed, sig)
 
     #Evaluate and push onto solver
-    print("Big One:")
-    print(bigOne)
-    print("\n\n\n\n")
+    #print("Big One:")
+    #print(bigOne)
+    #print("\n\n\n\n")
 
-    print("Variables used:" + str(variablesUsedMap))
+    #print("Variables used:" + str(variablesUsedMap))
     s.add((eval(bigOne, {}, variablesUsedMap)))
     s.push()
     print(s)
@@ -411,6 +411,8 @@ def grammar1(rhs, s, available):
 
     if(str(s.check())=="sat"):
         done = True
+        print(s)
+        print(s.model())
         m = s.model()
         ans = m[Int("hole")]
 
@@ -425,14 +427,14 @@ def grammar2(rhs, s, available):
 
 
 traceFile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/traces.txt"
-errorLine = "14"
+errorLine = "28"
 
 ##Assume that variables have the form xf1 (st = secondary trace)
 secondaryTrace = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthesis/TermProject/jager/output/bottomtraces.txt"
 outputfile = ""
 
-preconditions = ["x < 100"]
-postconditions = ["retf > 10"]
+preconditions = []
+postconditions = ["retf > 0"]
 
 #Start the actual program
 rhs = "x"
@@ -485,7 +487,7 @@ for t in range(0, len(firstTraces)):
     available[t]=arr
 
 #At this point, available should be a map, going from each trace number to all the available values
-print(available)
+#print(available)
 #Try Various Grammars  
 soFar = "unsat"
 ans =""

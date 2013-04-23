@@ -1,33 +1,121 @@
 ---
 programid: None
 preconditions: 
+  - "x != 0"
 postconditions: 
-  - "retf > 2"
+  - "retf >= 0"
 traces: 
   - id: trace0
     status: good
     statements: 
-      - statement: "x1 > 0"
+      - statement: "a2 == 1"
         line:  11
-      - statement: "x2 == x1 + 1"
+      - statement: "x1 > 0"
         line:  12
-      - statement: "x3 == x2 + 1"
-        line:  16
-      - statement: "x4 == x3 + 1"
-        line:  17
-      - statement: "ret == x4"
-        line:  18
+      - statement: "y1 <= 0"
+        line:  13
+      - statement: "a3 == -1"
+        line:  14
+      - statement: "a3 <= 0"
+        line:  22
+      - statement: "y1 < 0"
+        line:  23
+      - statement: "y2 == y1 * -1"
+        line:  24
+      - statement: "x1 >= 0"
+        line:  32
+      - statement: "x2 == x1 + y2"
+        line:  36
+      - statement: "ret == x2"
+        line:  37
   - id: trace1
+    status: good
+    statements: 
+      - statement: "a2 == 1"
+        line:  11
+      - statement: "x1 > 0"
+        line:  12
+      - statement: "y1 <= 0"
+        line:  13
+      - statement: "a3 == -1"
+        line:  14
+      - statement: "a3 <= 0"
+        line:  22
+      - statement: "y1 >= 0"
+        line:  23
+      - statement: "x1 >= 0"
+        line:  27
+      - statement: "x1 >= 0"
+        line:  32
+      - statement: "x2 == x1 + y1"
+        line:  36
+      - statement: "ret == x2"
+        line:  37
+  - id: trace2
+    status: good
+    statements: 
+      - statement: "a2 == 1"
+        line:  11
+      - statement: "x1 > 0"
+        line:  12
+      - statement: "y1 > 0"
+        line:  13
+      - statement: "a2 > 0"
+        line:  22
+      - statement: "x1 >= 0"
+        line:  32
+      - statement: "x2 == x1 + y1"
+        line:  36
+      - statement: "ret == x2"
+        line:  37
+  - id: trace3
     status: bad
     statements: 
-      - statement: "x1 <= 0"
+      - statement: "a2 == 1"
         line:  11
-      - statement: "x2 == x1 * -1"
-        line:  14
-      - statement: "x3 == x2 + 1"
-        line:  16
-      - statement: "x4 == x3 + 1"
+      - statement: "x1 <= 0"
+        line:  12
+      - statement: "y1 >= 0"
         line:  17
-      - statement: "ret == x4"
+      - statement: "a3 == -1"
         line:  18
+      - statement: "a3 <= 0"
+        line:  22
+      - statement: "y1 >= 0"
+        line:  23
+      - statement: "x1 < 0"
+        line:  27
+      - statement: "x2 == x1 * 1"
+        line:  28
+      - statement: "x2 < 0"
+        line:  32
+      - statement: "x3 == x2 * -1"
+        line:  33
+      - statement: "y2 == y1 * -1"
+        line:  34
+      - statement: "x4 == x3 + y2"
+        line:  36
+      - statement: "ret == x4"
+        line:  37
+  - id: trace5
+    status: good
+    statements: 
+      - statement: "a2 == 1"
+        line:  11
+      - statement: "x1 <= 0"
+        line:  12
+      - statement: "y1 < 0"
+        line:  17
+      - statement: "a2 > 0"
+        line:  22
+      - statement: "x1 < 0"
+        line:  32
+      - statement: "x2 == x1 * -1"
+        line:  33
+      - statement: "y2 == y1 * -1"
+        line:  34
+      - statement: "x3 == x2 + y2"
+        line:  36
+      - statement: "ret == x3"
+        line:  37
 ...

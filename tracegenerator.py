@@ -55,7 +55,7 @@ def createJPFFile(nc, c, path, package, dest):
     f2.write("\n\n")
     f2.write("jager.lineOfError=-1")
     f2.write("\n\n")
-    f2.write("jager.outputFile="+dest)
+    f2.write("jager.outputFile="+dest+"/traces.txt")
 
     f2.close();
 
