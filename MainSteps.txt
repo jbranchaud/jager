@@ -1,0 +1,6 @@
+1) Run tracegenerator
+2) Put output into file traces.txt
+3) Load pre/post conditions into gbtraceseperator.py
+4) Run gbtracesseperator
+	This in turn runs the bug localization tools
+5) Run jpf with line number from bug localization
