@@ -54,6 +54,12 @@ sublists are of length two with the first item being an integer representing
 the particular line number and the second item being a string representing a
 decimal value that is the ranking (between 1.0 and 0.0).
 
+## Limitations
+
+Jager has a number of limitations when it comes to adjusting programs. Some
+of them are tied to limitations of symbolic execution and others are
+limitations in our own implementation.
+
 ## File Formats
 
 ### Specification File Format
