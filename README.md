@@ -119,4 +119,7 @@ Python Libraries:
 
 ## License
 
+Copyright &copy; 2013 [Josh Branchaud](http://joshbranchaud.com) and Eric
+Rizzi
+
 ... not sure yet
