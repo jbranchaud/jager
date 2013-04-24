@@ -1,7 +1,16 @@
-# jager - symbolic specification-based program repair
+# jager - symbolic specification-based program adjustment
 
 a class project for CSE990 at [UNL](http://unl.edu) in
 [the Department of Computer Science and Engineering](http://cse.unl.edu)
+
+This is an approach similar to some program repair techniques that seeks to
+localize a fault and automatically fix that fault. However, we frame our
+approach such that we seek to localize an inconsistency and adjust it such
+that the program behaves in a desired way. The desired program behavior that
+we are interested in is based on specifications for the program in the form
+of pre and post conditions. Given a program that doesn't meet our
+specifications, we adjust the program in such a way that it then satisifies
+the specifications.
 
 ## Fault Localization
 
