@@ -3,7 +3,7 @@ programid: None
 preconditions: 
   - "x != 0"
 postconditions: 
-  - "retf >= 0"
+  - "retf > 0"
 traces: 
   - id: trace0
     status: good

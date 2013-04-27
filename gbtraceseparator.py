@@ -200,7 +200,7 @@ outputfile = "/Users/jessemiller/Documents/UNL/2012-13/2ndSemester/ProgramSynthe
 
 preconditions = ["x != 0"]
 ##Just for now, label all variables as xf and yf to designate final
-postconditions = ["retf >= 0"]
+postconditions = ["retf > 0"]
 programId = "None"
 otherInfo = []
 
