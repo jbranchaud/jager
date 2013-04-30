@@ -216,6 +216,59 @@ is not the post condition being marked \emph{bad}, the other being marked
 
 \subsection{Fault Localization}
 
+As discussed earlier in the limitations, it is important to isolate a very
+small portion of the program that can be blamed for the fault. This is where
+fault localization comes into the picture. In our case, we are interested in
+identifying a single statement that is potentially faulty. It is that faulty
+statement that we attempt to adjust in such a way that \emph{fixes} the
+program. Like SemFix \cite{}, we borrow from the approach of Jones et al.
+\cite{JonesTarantula} by computing a ranked list of \emph{suspicious}
+statements. Unlike Jones et al. and SemFix though, we do not use traces from
+the runs of test cases in a test suite. Instead, we utilize the traces
+produced by symbolic execution.
+
+The approach for localizing faults is to build a ranked list of the most
+supsicious statements in the program. We present the suspiciousness formula
+used for this kind of fault localization in Equation~\ref{tarantula1}.
+
+\begin{equation}
+\label{tarantula1}
+    susp(s) = \frac{failing(s)/totalFailing}{failing(s)/totalFailing + passing(s)/totalPassing}
+\end{equation}
+
+Equation~\ref{tarantula1} relies entirely on the presence of a test suite
+that can be run to differentiate between passing and failing test cases
+which refer to concrete traces. It also relies on the test suite being of a
+certain quality with the suite having as high of a coverage metric as
+possible. Unlike these approaches, our approach uses \emph{good} and
+\emph{bad} symbolic traces (discussed in the previous section) to replace
+the passing and failing concrete traces. Thus, we present a subtle variant
+of the suspiciousness formula with Equation~\ref{tarantula2}.
+
+\begin{equation}
+\label{tarantula2}
+    susp(s) = \frac{bad(s)/totalBad}{bad(s)/totalBad + good(s)/totalGood}
+\end{equation}
+
+By using Equation~\ref{tarantula2} with all the traces through the program, we can
+quickly compute a list of statements ranked by suspiciousness. Instead of
+being tied to a test suite, the suspiciousness is based on all traces
+through the program and their ability to meet (or not) the specifications of
+the program. We believe this provides a fuller, more precise picture of what
+statements may be culpable. However, we do recognize that just as test
+suites can have low coverage, the specifications for the program may not be
+strong enough to say much.
+
+Once we have a ranked list of suspicious statements, we can grab the most
+suspicious statement and pass it to the next phases of our technique so that
+an adjustment can be made. If there are multiple statements with the same
+suspiciousness score, we arbitrarily pick one. If a statement doesn't match
+the kind of statements we attempt to repair, then we grab the next statement
+that does fall in line. This is necessary as long as we have a limited
+repair grammar. Additionally, if a suitable repair can not be found for the
+first statement passed along, then we pass along a subsequent statement.
+
+
 \subsection{Pre and Post Condition Generation}
 Once the bug has been found, we now go through the process of isolating the
 traces that are associated with the fault.  This is a two-part process.
