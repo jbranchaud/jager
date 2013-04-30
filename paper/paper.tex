@@ -48,9 +48,7 @@
 
 \maketitle
 
-\section{Outline}
-
-\subsection{Introduction}
+\section{Introduction}
 The field of program synthesis has seen dramatic improvements over the last
 few years.  The increasing power of SAT solvers has allowed researchers to
 ask more sophisticated questions and to handle larger programs than they
@@ -71,9 +69,9 @@ automatically.  While the programs that we were eventually able to repair
 were admittedly very small, it was exciting to see even obvious errors
 disappear without any oversight.
 
-\subsubsection{Background}
+\subsection{Background}
 
-\subsection{Limitations}
+\section{Limitations}
 With all of the improvements seen in the past few years, however, the
 synthesis community must contend with the basic limitations that the
 technique will likely always have to address.  These can be split into two
@@ -109,7 +107,7 @@ would be too expensive an undertaking to attempt.  From this framework,
 however, incremental improvements can be made until the entire program is
 proven correct.
 
-\subsection{Approach}
+\section{Approach}
 Before continuing on to an explanation of our technique, there were several
 assumptions and restrictions that we made in our project in order to
 decrease the complexity of the programs with which we were dealing.  One of
@@ -167,7 +165,7 @@ therefore the bug would go unfixed.  We assumed there would be only a single
 buggy line in order to avoid the necessity of having to distinguish between
 independent and dependent errors.
 
-\subsubsection{Trace Generation}
+\subsection{Trace Generation}
 The first step in synthesizing a program is generating traces that describe
 the program's behavior.  Some of the techniques we read about used concrete
 traces, generated from test suites.  Since we assumed that the program would
@@ -181,7 +179,7 @@ traces is much larger, resulting in a more precise analysis; one that would
 be provably correct at the end.  Each of these traces is captured in SSA
 form, which makes manipulating them to put into the SAT solver much easier.
 
-\subsubsection{Trace Differentiation}
+\subsection{Trace Differentiation}
 In this step of our program, we add pre and post conditions to the traces
 that were generated in the previous step and calculate which traces followed
 a path of execution resulting in satisfying the post condition, and which do
@@ -210,9 +208,9 @@ the synthesis process.  Those where it is possible to end up in a space that
 is not the post condition being marked \emph{bad}, the other being marked
 \emph{good}.
 
-\subsubsection{Fault Localization}
+\subsection{Fault Localization}
 
-\subsubsection{Pre and Post Condition Generation}
+\subsection{Pre and Post Condition Generation}
 Once the bug has been found, we now go through the process of isolating the
 traces that are associated with the fault.  This is a two-part process.
 First, we slice all traces, both good and bad, that go through the buggy
@@ -231,7 +229,7 @@ of top traces and a set of bottom traces that surround the error.  This
 information is then passed to the final stage of our process, synthesis, in
 order to repair the program.
 
-\subsubsection{Synthesis}
+\subsection{Synthesis}
 This final part of our process is by far the most intensive, requiring not
 only the creation of a line that will fix the program, but also verification
 that this fix works for all paths that are involved with the repair.  The
@@ -289,11 +287,11 @@ particular grammar is powerful enough to fill in the hole.  We just can't
 learn which particular form of our grammar will solve it without iterating
 through models until we finally find one that works.
 
-\subsection{Evaluation}
+\section{Evaluation}
 
-\subsection{Related Work}
+\section{Related Work}
 
-\subsection{Future Work}
+\section{Future Work}
 
 Reduce size of queries via...
 
@@ -316,8 +314,8 @@ Increase complexity of grammars
 
 Investigate dependent bugs by pairing statements
 
-\subsection{Conclusion}
+\section{Conclusion}
 
-\subsection{References}
+\section{References}
 
 \end{document}
