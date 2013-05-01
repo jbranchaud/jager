@@ -352,6 +352,37 @@ through models until we finally find one that works.
 
 \section{Future Work}
 
+There are a variety of ways in which Jager could be improved at this point.
+These are all future work items which we will detail in this section. The
+first of which would be to tie all the phases of Jager together so that they
+can be performed automatically. Currently, each phase needs to be manually
+invoked with the inputs relevant to that phase. We would like to add
+connectors to all of the phases so that when one phase completes, its output
+can be used to invoke the subsequent phase. This is mainly an engineering
+task whereas the remaining future work items are related to the approach.
+
+With respect to the trace generation phase, we are interested in exploring
+ways in which less traces need to be generated. Our approach exhaustively
+generates all traces for a program. While this may be feasible for the small
+programs we have worked with, it could quickly becoming intractable for even
+medium-sized programs. Existing program repair approaches do not suffer from
+this kind of problem because they generate traces from test suites which
+remain resonable in size even for large projects. It would be interesting to
+see if there is some sweet spot sitting between the set of \emph{all} traces
+through a program and the set of traces generated from a test suite.
+Ideally, this sweet spot would be less computationally intensive than
+generating all traces, but still provide better behavior coverage than a
+traditional test suite.
+
+During the trace differentiation phase and fault localization phase, we
+identify \emph{good} and \emph{bad} traces and use them to localize faulty
+program statements. In approaches that generate traces from test suites, we
+can be reasonably sure that the traces represent interesting and relevant
+paths through the program based on common use cases. However, with our
+approach, we generate all traces, some of which may not be common or
+interesting. Because of this, we believe it may be useful to consider ways
+of weighting certain paths through the program 
+
 Reduce size of queries via...
 
 Removing redundant top traces
