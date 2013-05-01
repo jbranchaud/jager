@@ -367,7 +367,7 @@ generates all traces for a program. While this may be feasible for the small
 programs we have worked with, it could quickly becoming intractable for even
 medium-sized programs. Existing program repair approaches do not suffer from
 this kind of problem because they generate traces from test suites which
-remain resonable in size even for large projects. It would be interesting to
+remain reasonable in size even for large projects. It would be interesting to
 see if there is some sweet spot sitting between the set of \emph{all} traces
 through a program and the set of traces generated from a test suite.
 Ideally, this sweet spot would be less computationally intensive than
@@ -381,7 +381,12 @@ can be reasonably sure that the traces represent interesting and relevant
 paths through the program based on common use cases. However, with our
 approach, we generate all traces, some of which may not be common or
 interesting. Because of this, we believe it may be useful to consider ways
-of weighting certain paths through the program 
+of weighting certain paths through the program. It is unclear at this point
+how we would go about weighting certain traces over others though.
+
+Generate more succinct constraints for the synthesis...
+
+Add more complex grammars to the synthesis...
 
 Reduce size of queries via...
 
