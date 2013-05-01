@@ -384,30 +384,11 @@ interesting. Because of this, we believe it may be useful to consider ways
 of weighting certain paths through the program. It is unclear at this point
 how we would go about weighting certain traces over others though.
 
-Generate more succinct constraints for the synthesis...
+In addition, there are many avenues for gain when it comes to reducing the size of the queries sent to the SAT solver.  For example, we could look to for whether traces are duplicated or have become infeasible due to slicing.  This later instance would occur because our bottom trace generator completely clears the precondition when gathering traces below the bug.  While the constraints related to the LHS variable should be cleared, since we don't know what will happen with the synthesized hole, constraints on other variables may be infeasible and therefore it isn't worth checking that path.  We could also check whether some traces be subsumed by others, or whether we could remove variables and constraints that are not associated with hole entirely from the query.  This overhead at the beginning from trimming the amount of information that is passed to the solver could pay huge dividends later in the synthesis process.  This is because of the iterative nature of the developing a hole; continually refining with perhaps hundreds of attempts until a solution is found.  
 
-Add more complex grammars to the synthesis...
+Another possibility that we thought of is doing a much finer analysis of what variables are needed to be distinguished from each other and those that can be associated without complications.  For example, in our project we took an exceptionally conservative approach, only allowing the names to be reused across traces by variables in the pre and post condition.  Looking for more areas where there is overlap would reduce the number of variables passed to the solver and likely decrease the amount of time the solver requires per query.
 
-Reduce size of queries via...
-
-Removing redundant top traces
-
-Looking for merge points between traces to reduce number of variables used in whole query
-
-Remove impossible bottom traces based on top traces
-
-Basically if variable unassociated with bug is constraint in top and bottom
-in infeasible way, then throw it out.
-
-Look into removing variables that aren't involved in bug from consideration
-
-Perhaps through postcondition raising
-
-Integrate steps 1, 2 into single step
-
-Increase complexity of grammars
-
-Investigate dependent bugs by pairing statements
+Finally, we see an opportunity for repairing bugs that are the result of two dependent lines.  If a bug is unable to be fixed by any single line fix, then a repair can be looked for by pairing statements, and then synthesizing a fix for both at the same time.  While this would drastically increase the computational costs of the fix, we believe that good bug localization can reduce the problem to a manageable size.
 
 \section{Conclusion}
 
