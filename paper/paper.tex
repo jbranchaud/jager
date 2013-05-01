@@ -52,7 +52,7 @@ University of Nebraska-Lincoln \\
 \maketitle
 
 \section{Introduction}
-The field of program synthesis has seen dramatic improvements over the last
+The field of program synthesis and automatic repair has seen dramatic improvements over the last
 few years.  The increasing power of SAT solvers has allowed researchers to
 ask more sophisticated questions and to handle larger programs than they
 ever have before.  In short, this is an exciting time in program synthesis.
@@ -64,9 +64,8 @@ For our project, we decided to implement some of the techniques described in
 the state of the art research in order to gain a better understanding of
 their power and limitations, and to investigate ways to increase the speed
 of these methods.  The infrastructure we were eventually able to set up
-combined five separate steps to achieve the overall synthesis.  These steps
-are symbolic trace gathering, trace separation, fault localization, post bug
-symbolic execution, and synthesis.  By combining these five steps, we were
+combined five separate steps to achieve the overall repair.  These steps
+are generation of symbolic traces, differentiation of traces, fault localization, pre and post condition generation, and synthesis.  By combining these five steps, we were
 able to achieve a start to finish program repair that ran almost completely
 automatically.  While the programs that we were eventually able to repair
 were admittedly very small, it was exciting to see even obvious errors
@@ -78,8 +77,8 @@ disappear without any oversight.
 %\subsection{Background}
 
 \section{Limitations}
-With all of the improvements seen in the past few years, however, the
-synthesis community must contend with the basic limitations that the
+Despite all of the improvements seen in the past few years the
+synthesis community must contend with basic limitations that the
 technique will likely always have to address.  These can be split into two
 main classes.  The first set of limitations has to do with the ability to
 verify a program as correct or not.  Foremost among these are the difficulty
@@ -89,15 +88,15 @@ specifications, of determining what is the intended outcome.  These
 fundamental limitations must be at the forefront of the mind of everyone who
 works in this field.  They are also limiting factors to how widely these
 techniques can be adopted since any critical program is unlikely to use
-synthesized programs if the results they produce cannot be veified.
+synthesized programs if the results they produce cannot be verified.
 
 In addition to these verification concerns, there are certain computational
-restrictions with which researchers must contend.  The term program
+restrictions with which researchers must contend.  The phrase program
 synthesis is a bit of a misnomer, due to the fact that we are not, in fact,
 synthesizing an entire program.  To synthesize an entire piece of software
 from scratch is at this point impossible for all but the smallest toy
 programs.  The reason for this is the difference between verification and
-creation.  Verify a program ignores the huge amount of effort that was
+creation.  Verifying a program ignores the huge amount of effort that was
 required to even get the program close to working.  The current techniques
 which attempt to synthesize an entire program take an iterative approach;
 creating a program from pieces and checking to see whether this particular
@@ -108,7 +107,8 @@ of past attempts, but even with this approach, all but the simplest programs
 are intractable.  Therefore, instead of synthesizing an entire program, our
 technique instead relies on an underlying framework, produced by a
 programmer, which is assumed to be mostly correct.  This assumption is based
-on the Competent Programmer Hypothesis, and without it, program synthesis
+on the Competent Programmer Hypothesis, which states that programmers write
+code that is almost correct. Without it, program synthesis
 would be too expensive an undertaking to attempt.  From this framework,
 however, incremental improvements can be made until the entire program is
 proven correct.
@@ -132,8 +132,8 @@ setting.  Secondly, the loops would cause a problem due to the recursive
 properties that would be required of a fix.  Not only would the fix be
 required to fix a series of traces, the fix would be required to not
 interfere with itself for a variable number of times in order to solve the
-unrolled loops.  Consider for example, a loop with an error that is unrolled
-2 times.  A fix would have to fix the first trace.  It would also have to be
+unrolled loops.  Consider, for example, a loop with an error that is unrolled
+two times.  A fix would have to fix the first trace.  It would also have to be
 able to fix the second trace by combining with itself in a constructive way.
 This singular fix takes away the concept, seen in several papers, of
 incremental improvement.  This would make it almost impossible to fix
@@ -156,12 +156,12 @@ the solvers to answer these questions.
 
 Finally, we assumed that there would only be a single buggy line in each
 program.  This assumption is due to another weakness of synthesis; the
-necessity to make incremental progress.  Synthesis cannot currently change
-multiple lines at once.  Instead it must fix one line, see if it works, and
+necessity to make incremental progress.  No repair technique we found attempts to change
+multiple lines at once.  Instead, they fix one line, see if it works, and
 then continue on to the others.  While this approach means that it is would
 be possible to fix multiple independent buggy lines of code, fixing
 dependent bugs would be much more difficult.  The reason that independent
-bugs can be fixed was explored in the work of Logozzo et al. who classify
+bugs can be fixed was explored in the work of Logozzo et al. \cite{logozzoInference} who classify
 fixing of a program as the reduction of the number of bad traces.  If the
 buggy lines in the program, therefore, were independent, the first fix would
 be retained, since it improved the program, allowing full verification upon
@@ -177,22 +177,21 @@ the program's behavior.  Some of the techniques we read about used concrete
 traces, generated from test suites.  Since we assumed that the program would
 be accompanied by a comprehensive set of specs, we thought we would achieve
 a much more complete understanding of the behavior of the program with
-symbolic traces.  Therefore, we created a listener that would output the
+symbolic traces.  Therefore, we created a JPF listener that would output the
 complete set of instructions encountered along each symbolic path.  These
 paths can be though of as being representative of an entire set of concrete
-traces.  Therefore the amount of information that is captured with these
+traces.  This means the amount of information that is captured with these
 traces is much larger, resulting in a more precise analysis; one that would
 be provably correct at the end.  Each of these traces is captured in SSA
 form, which makes manipulating them to put into the SAT solver much easier.
 
 \subsection{Trace Differentiation}
 In this step of our program, we add pre and post conditions to the traces
-that were generated in the previous step and calculate which traces followed
-a path of execution resulting in satisfying the post condition, and which do
-not.  This is a two-step process.  First, since we didn't included the
+that were generated in the previous step.  With these modified traces, our goal is to
+ calculate which traces follow a path of execution resulting in satisfying the post condition, and which do not.  Determining this is a two-step process.  First, since we didn't included the
 preconditions in our listener, we must remove any traces that wouldn't be
-possible to follow.  We do this by querying the solver PRE AND TRACE.  This
-query is akin to asking the solver, is it possible to start with values that
+possible to follow.  We do this by querying the solver (PRE AND TRACE).  This
+query is akin to asking the solver if it is possible to start with values that
 satisfy the precondition and execute every single instruction in the trace
 without encountering any contradictions.  For example, if we generated the
 trace (x1<0, x2=x1+1) from our original exploration, but the precondition
@@ -228,7 +227,7 @@ the runs of test cases in a test suite. Instead, we utilize the traces
 produced by symbolic execution.
 
 The approach for localizing faults is to build a ranked list of the most
-supsicious statements in the program. We present the suspiciousness formula
+suspicious statements in the program. We present the suspiciousness formula
 used for this kind of fault localization in Equation~\ref{tarantula1}.
 
 \begin{equation}
@@ -262,26 +261,25 @@ strong enough to say much.
 Once we have a ranked list of suspicious statements, we can grab the most
 suspicious statement and pass it to the next phases of our technique so that
 an adjustment can be made. If there are multiple statements with the same
-suspiciousness score, we arbitrarily pick one. If a statement doesn't match
-the kind of statements we attempt to repair, then we grab the next statement
-that does fall in line. This is necessary as long as we have a limited
-repair grammar. Additionally, if a suitable repair can not be found for the
+suspiciousness score, we arbitrarily pick one. If a statement is not the type of
+statement that our framework is designed to repair, then we grab the next statement
+that does fall in line. Additionally, if a suitable repair can not be found for the
 first statement passed along, then we pass along a subsequent statement.
 
 
 \subsection{Pre and Post Condition Generation}
 Once the bug has been found, we now go through the process of isolating the
 traces that are associated with the fault.  This is a two-part process.
-First, we slice all traces, both good and bad, that go through the buggy
+First, we slice all of the traces, both good and bad, that go through the buggy
 line so that anything at or below the bug no longer exists.  The reason for
 this is that we must account for all possible ways to approach an error
 within the program, but also do not want the information generated after the
-bug to effect our synthesis.  Following this, we again symbolically execute
-the program, this time, however, only for the paths emanating from the bug.
+bug to effect our synthesis.  After this, we again symbolically execute
+the program. The difference is this time we only explore the paths emanating from the bug.
 The reason for this is due to the fact that since the bug caused an
 incorrect execution, it is possible that it forced a particular trace to go
 down the wrong path following the bug.  It is also possible that a path that
-was considered infeasible when executing the buggy line, now may be
+was originally considered infeasible when executing the buggy line, now may be
 possible.  Therefore, we want to consider all possible flows of execution
 emanating from the error.  With the completion of this step, we have a set
 of top traces and a set of bottom traces that surround the error.  This
@@ -308,8 +306,8 @@ individual top traces together with AND2's.  This is because we program must
 be able to properly execute along all possible paths that lead to the hole.
 
 The HOLE part of the program is where the synthesis magic comes in.  We are
-asking the solver two different questions at this stage.  First, we are
-asking whether it is possible for some statement to bridge the gap between
+asking the solver two different questions at this stage.  First, we
+ask whether it is possible for some statement to bridge the gap between
 the top and the bottom.  Second, we ask for a model of this statement that
 will serve as our prospective repair.  If the answer to the first query is
 false, then we know that our grammar is not powerful enough to fill in the
@@ -325,8 +323,8 @@ precondition, execute some path, and end up in an acceptable post-condition;
 that some value will satisfy all of the given constraints.  Just like our
 trace separation stage, however, this assertion is not powerful enough.
 Instead, we want to know whether this patch will work for all values of
-precondition.  In order to show this, we must negate the post condition, and
-see if it is possible to end up outside of the post condition.  If the
+precondition.  In order to show this, we must negate the post condition to
+see if it is possible to end up outside of the area it describes.  If the
 solver returns UNSAT to this query, meaning that it is not possible to end
 up with a value that doesn't satisfy the post condition, then our work is
 done and we have both created and verified the repair.  If instead the
@@ -364,10 +362,10 @@ task whereas the remaining future work items are related to the approach.
 With respect to the trace generation phase, we are interested in exploring
 ways in which less traces need to be generated. Our approach exhaustively
 generates all traces for a program. While this may be feasible for the small
-programs we have worked with, it could quickly becoming intractable for even
+programs we worked with, it could quickly becoming intractable for even
 medium-sized programs. Existing program repair approaches do not suffer from
 this kind of problem because they generate traces from test suites which
-remain reasonable in size even for large projects. It would be interesting to
+remain reasonable in size for even large projects. It would be interesting to
 see if there is some sweet spot sitting between the set of \emph{all} traces
 through a program and the set of traces generated from a test suite.
 Ideally, this sweet spot would be less computationally intensive than
@@ -384,7 +382,7 @@ interesting. Because of this, we believe it may be useful to consider ways
 of weighting certain paths through the program. It is unclear at this point
 how we would go about weighting certain traces over others though.
 
-In addition, there are many avenues for gain when it comes to reducing the size of the queries sent to the SAT solver.  For example, we could look to for whether traces are duplicated or have become infeasible due to slicing.  This later instance would occur because our bottom trace generator completely clears the precondition when gathering traces below the bug.  While the constraints related to the LHS variable should be cleared, since we don't know what will happen with the synthesized hole, constraints on other variables may be infeasible and therefore it isn't worth checking that path.  We could also check whether some traces be subsumed by others, or whether we could remove variables and constraints that are not associated with hole entirely from the query.  This overhead at the beginning from trimming the amount of information that is passed to the solver could pay huge dividends later in the synthesis process.  This is because of the iterative nature of the developing a hole; continually refining with perhaps hundreds of attempts until a solution is found.  
+In addition, there are many avenues for gain when it comes to reducing the size of the queries sent to the SAT solver.  For example, we could look to remove traces that are duplicated or have become infeasible due to slicing.  This later instance would occur because our bottom trace generator completely clears the precondition when gathering traces below the bug.  While the constraints related to the LHS variable should be cleared, since we don't know what will happen with the synthesized hole, constraints on other variables may be still be infeasible and therefore it isn't worth considering that path.  We could also check whether some traces are subsumed by others, or whether we could remove variables and constraints that are not associated with hole entirely from the query.  The increased overhead at the beginning from trimming the amount of information that is passed to the solver could potentially pay huge dividends later in the synthesis process.  This is because of the iterative nature of the developing a hole; continually refining with perhaps hundreds of attempts until a solution is found.  
 
 Another possibility that we thought of is doing a much finer analysis of what variables are needed to be distinguished from each other and those that can be associated without complications.  For example, in our project we took an exceptionally conservative approach, only allowing the names to be reused across traces by variables in the pre and post condition.  Looking for more areas where there is overlap would reduce the number of variables passed to the solver and likely decrease the amount of time the solver requires per query.
 
