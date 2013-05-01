@@ -1,0 +1,25 @@
+\section{Conclusion}
+
+There is quite a bit of attention in the area of program repair and
+synthesis right now. Many of the current approaches take a test suite based
+approach to understanding what the intended behavior of the program is.
+Though we borrow conceptually from some of these techniques, our approach is
+fundamentally different in that we rely on program specifications, namely
+preconditions and postconditions, to understand the intended behavior of a
+program.
+
+Our program repair technique, Jager, relies on symbolic execution and SMT
+solvers to repair programs. This is accomplished with 5 distinct steps: 1)
+symbolic trace generation, 2) trace differentiation, 3) statistical fault
+localization, 4) precondtion and postcondition generation around the fault,
+and 5) fine-grained synthesis to replace the fault. Though our
+implementation is in its infancy, we believe it provides a sufficient proof
+of concept for the approach we have presented in this paper.
+
+As the supporting state of the arts for technologies like symbolic
+execution, SMT solvers, and synthesis continue to progress and evolve, we
+believe that program repair techniques like ours will become increasingly
+relevant. In a world where even the simplest applications can contain large
+amounts of code, it is increasingly necessary to have ways of automatically
+identifying and repairing bugs so that valuable human resources can be
+focused elsewhere.
